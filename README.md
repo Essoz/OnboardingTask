@@ -86,15 +86,25 @@ logcabinctl info get
 sudo cpulimit --pid $pid --limit 50
 ```
 
+I applied several CPU settings on the system
+
+- No Limit
+- Leader CPU usage limit 50%
+- Leader CPU usage limit 30%
+- Leader CPU usage limit 10%
+- Follower CPU usage limit 50%
+- Follower CPU usage limit 50%
+
 Here's the result.
 
-[Imgur](https://imgur.com/bwiB68X)
+[Latency](https://imgur.com/bwiB68X)
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="bwiB68X"><a href="https://imgur.com/bwiB68X">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-
-
-
-<blockquote class="imgur-embed-pub" lang="en" data-id="wbgF5tK" data-context="false" ><a href="//imgur.com/wbgF5tK"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+[Average Latency](https://imgur.com/wbgF5tK)
 
 ##### Result Interpretation
 
+As can be seen from the graph **Latency**, the time need for writing 1000 objects are basically same for every setting. While in the beginning, the time needed of these settings varied.
+
+The result are very similar for the latter running of benchmarks because whatever the setting, eventually the node being suppressed will become a follower. As a raft system operates on as long as a majority of nodes (two nodes in our case) are functioning well, the system won't be affected by the "limited" node.
+
+The main variance in the result are in the comparison between the cases where leaders are being limited and those leaders are not being limited. From [Latency](https://imgur.com/bwiB68X) we see that the 1-st and 5-th try of a "Leader CPU usage limit 30%" system took extraordinary long periods of time. From the log we see that major time consumed is for the client to find and wait for the Leader's response. And on further inspection, we see that **the leader changed several times** in the 1-st and 5-th try, during which the system is not available, causing an extraordinary waiting time. The underlying rationale is easily to explain: The sudden surge of requests will greatly increase the response time of the leader, leading to two results. 1. The leader failed to send a AppendEntries RPC to its peers, causing another election. 2. The leader failed to return result to the client with in client.timeout, causing the client to re-find the leader. The superposition of the two above results caused the extraordinary waiting time.
