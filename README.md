@@ -88,9 +88,13 @@ sudo cpulimit --pid $pid --limit 50
 
 Here's the result.
 
-![avatar](https://imgur.com/bwiB68X)
+[Imgur](https://imgur.com/bwiB68X)
 
-![avatar](https://imgur.com/wbgF5tK)
+<blockquote class="imgur-embed-pub" lang="en" data-id="bwiB68X"><a href="https://imgur.com/bwiB68X">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
+
+
+<blockquote class="imgur-embed-pub" lang="en" data-id="wbgF5tK" data-context="false" ><a href="//imgur.com/wbgF5tK"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 ##### Result Interpretation
 
